@@ -1,0 +1,17 @@
+vendor_id
+pickup_dt
+dropoff_dt
+passenger_count
+distance
+ratecode_id
+store_fwd_flag
+pu_location_id
+do_location_id
+payment_type
+fare_amount
+extra
+mta_max
+tip_amount
+tolls_amount
+improvement_surcharge
+total_amount

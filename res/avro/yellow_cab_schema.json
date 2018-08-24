@@ -1,0 +1,24 @@
+{
+	"namespace": "kakfa-avro.taxi",
+	"type": "record",
+	"name": "trip",
+	"fields":[
+		{"name": "vendor_id", "type": "int"},
+		{"name": "pickup_dt",  "type": "string"},
+		{"name": "dropoff_dt", "type": "string"},
+		{"name": "passengers", "type": "int"},
+		{"name": "distance", "type": "float"},
+		{"name": "ratecode_id", "type": "int"},
+		{"name": "store_fwd_flag", "type": "string"},
+		{"name": "pu_location_id", "type": "int"},
+		{"name": "do_ocation_id", "type": "int"},
+		{"name": "payment_type", "type": "int"},
+		{"name": "fare_amount", "type": "float"},
+		{"name": "extra", "type": "float"},
+		{"name": "mta_max", "type": "float"},
+		{"name": "tip_amount", "type": "float"},
+		{"name": "tolls_amount", "type": "float"},
+		{"name": "improvement_surcharge", "type": "float"},
+		{"name": "total_amount", "type": "float"}
+	]
+}
