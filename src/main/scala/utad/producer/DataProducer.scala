@@ -2,44 +2,41 @@ package utad.producer
 
 import org.apache.spark.sql.SparkSession
 
-case class Record (
-	                  key : String,
-	                  value: String
-                  )
 
 /**
   * Simple class when executed feeds a kafka topic with data read from given csv file.
   */
 class DataProducer {
 
-	val spark = SparkSession.builder.master("local").getOrCreate()
 
-	import spark.implicits._
+	def fillTopic(filePath: String, topic: String)(implicit spark: SparkSession) : Unit = {
 
-	def fillTopic(filePath: String, topic : String): Unit ={
+		import spark.implicits._
+
 		val df = spark.read
 			.option("header", "true")
 			.csv(filePath)
 
-		val df_ser = df.map( row =>
+		val df_ser = df.map(row =>
 			new Record(
 				key = row.getAs[String]("VendorID") + row.getAs[String]("tpep_pickup_datetime"),
 				value = row.mkString(",")
 			)
 		)
 
-		df_ser.show()
-
 		df_ser
-		.write
-		.format("kafka")
-		.option("kafka.bootstrap.servers", "localhost:9092")
-		.option("topic", topic)
-		.save()
-
+			.write
+			.format("kafka")
+			.option("kafka.bootstrap.servers", "localhost:6001") // TODO coger de conf
+			.option("topic", topic)
+			.save()
 
 	}
-
 }
 
+
+case class Record(
+	                 key: String,
+	                 value: String
+                 )
 
