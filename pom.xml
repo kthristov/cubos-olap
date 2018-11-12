@@ -13,9 +13,9 @@
         <encoding>UTF-8</encoding>
         <scala.version>2.11.12</scala.version>
         <scala.compat.version>2.11</scala.compat.version>
-        <spark.version>2.3.2</spark.version>
+        <spark.version>2.4.0</spark.version>
         <spec2.version>4.2.0</spec2.version>
-        <cassandra.version>${spark.version}</cassandra.version>
+        <cassandra.version>2.3.2</cassandra.version>
     </properties>
 
     <dependencies>
@@ -42,12 +42,7 @@
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql-kafka-0-10_${scala.compat.version}</artifactId>
             <version>${spark.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.kafka</groupId>
-                    <artifactId>kafka-clients</artifactId>
-                </exclusion>
-            </exclusions>
+
         </dependency>
 
         <dependency>
@@ -105,7 +100,7 @@
         <dependency>
             <groupId>com.datastax.spark</groupId>
             <artifactId>spark-cassandra-connector-embedded_${scala.compat.version}</artifactId>
-            <version>${spark.version}</version>
+            <version>${cassandra.version}</version>
             <scope>test</scope>
         </dependency>
 

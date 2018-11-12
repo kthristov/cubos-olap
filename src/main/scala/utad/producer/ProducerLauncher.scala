@@ -2,7 +2,7 @@ package utad.producer
 
 import java.util.Properties
 
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{Encoders, SparkSession}
 
 /**
   * Simple class for launching the DataProducer.
@@ -11,17 +11,17 @@ object ProducerLauncher {
 
 	def main(args: Array[String]): Unit = {
 
-		// TODO read conf file (kafka params, spark params)
+		// TODO read from conf file all parameters
 
-		val topic = "yellow_cabs"
-		val filePath = args(0)
+		val topic = "test"
+		val in = "in/*.csv"
 
-		implicit val spark = SparkSession.builder()
-								.master("local")
-								.getOrCreate()
+		implicit val spark: SparkSession = SparkSession.builder()
+			.master("local")
+			.getOrCreate()
 
-		val dataProducer = new DataProducer()
-		dataProducer.fillTopic(filePath, topic)
+		val producer = new SparkProducer()
+		producer.fillTopic(in, topic)
 
 	}
 }
