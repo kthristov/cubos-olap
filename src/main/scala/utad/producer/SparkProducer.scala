@@ -4,13 +4,13 @@ import org.apache.spark.sql.{SparkSession, functions}
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.Encoders
 import org.apache.spark.sql.streaming.OutputMode
+import utad.data.Trip
 
 
 /**
   * Simple class when executed feeds a kafka topic with data read from given csv file.
   */
 class SparkProducer {
-
 
 	/**
 	  * Given path reads files and writes all data to given kafka topic
@@ -43,23 +43,4 @@ class SparkProducer {
 }
 
 
-case class Trip(
-	               vendor_id: Long,
-	               pickup_dt: String,
-	               dropoff_dt: String,
-	               passengers: Integer,
-	               distance: Float,
-	               ratecode_id: Integer,
-	               store_fwd_flag: String,
-	               pu_location_id: Integer,
-	               do_location_id: Integer,
-	               payment_type: Integer,
-	               fare_amount: Float,
-	               extra: Float,
-	               mta_max: Float,
-	               tip_amount: Float,
-	               tolls_amount: Float,
-	               improvement_surcharge: Float,
-	               total_amount: Float
-                )
 

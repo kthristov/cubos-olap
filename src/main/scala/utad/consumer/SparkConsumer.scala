@@ -2,7 +2,8 @@ package utad.consumer
 
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
-import utad.producer.Trip
+
+import utad.data.Trip
 
 class SparkConsumer {
 
@@ -23,7 +24,7 @@ class SparkConsumer {
 			.readStream
 			.format("kafka")
 			.option("kafka.bootstrap.servers", "localhost:9092")
-    		.option("auto.offset.reset", "earliest")
+			.option("startingOffsets", "earliest")
 			.option("subscribe", topic)
 			.load()
 

@@ -1,0 +1,11 @@
+
+DROP TABLE IF EXISTS olap.optimum_races;
+
+CREATE TABLE olap.optimum_races (
+   pickup_hour int,
+   pickup_location int,
+   distance float,
+   total_amount float,
+   id text,
+   PRIMARY KEY (pickup_hour, pickup_location, id)
+);

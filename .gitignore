@@ -2,3 +2,9 @@
 target/*
 *.iml
 spark-warehouse/*
+*.idea*
+/.*
+*/.*
+*/.idea/*
+checkpoint/*
+res/checkpoint/*
