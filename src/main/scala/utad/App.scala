@@ -63,9 +63,6 @@ object App {
 
 				batchDF.cache()
 
-				// Debug
-				println(batchDF.count())
-
 				// Writing to HDFS
 				batchDF.write
 					.mode("append")
