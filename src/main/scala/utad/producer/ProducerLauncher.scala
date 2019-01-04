@@ -1,9 +1,8 @@
 package utad.producer
 
-import java.util.Properties
-
 import com.typesafe.config.{Config, ConfigFactory}
-import org.apache.spark.sql.{Encoders, SparkSession}
+import org.apache.log4j.{Level, Logger}
+import org.apache.spark.sql.SparkSession
 
 import scala.io.Source
 
@@ -18,14 +17,25 @@ object ProducerLauncher {
 		val fileContents = Source.fromFile("conf/app.conf").getLines.mkString("\n")
 		val config: Config = ConfigFactory.parseString(fileContents)
 
-		val topic = config.getString("kafka.olapTopic")
-		val in = config.getString("hdfs.in")
+		val kafkaHost: String = config.getString("kafka.host")
+		val kafkaPort: String = config.getString("kafka.port")
+		val topic: String = config.getString("kafka.olapTopic")
+		val in: String = config.getString("hdfs.in")
+		val sparkMaster: String = config.getString("spark.master")
 
+		val kafka = kafkaHost + ":" + kafkaPort
+
+		// TODO spark session creation by extending trait
+		// Removing spark info log
+		Logger.getLogger("org").setLevel(Level.OFF)
+		Logger.getLogger("akka").setLevel(Level.OFF)
+
+		// Generating  SparkSession
 		implicit val spark: SparkSession = SparkSession.builder()
-			.master("local")
+			.master(sparkMaster)
 			.getOrCreate()
 
-		val producer = new SparkProducer()
+		val producer = new SparkProducer(kafka)
 		producer.fillTopic(in, topic)
 
 	}

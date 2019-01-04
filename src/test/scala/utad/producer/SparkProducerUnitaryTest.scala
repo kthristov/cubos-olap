@@ -33,10 +33,10 @@ class SparkProducerUnitaryTest extends FunSuite
 
 		implicit val spark: SparkSession = sparkSession
 		import spark.implicits._
-
-		val producer = new SparkProducer()
-		println("filling topic...")
-		producer.fillTopic(filePath, topic)
+//
+//		val producer = new SparkProducer()
+//		println("filling topic...")
+//		producer.fillTopic(filePath, topic)
 
 //		val df = spark
 //			.readStream

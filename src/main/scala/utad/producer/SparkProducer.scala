@@ -1,28 +1,28 @@
 package utad.producer
 
-import org.apache.spark.sql.{SparkSession, functions}
-import org.apache.spark.sql.types._
-import org.apache.spark.sql.Encoders
-import org.apache.spark.sql.streaming.OutputMode
+import org.apache.spark.sql.{Encoders, SparkSession}
 import utad.data.Trip
 
 
 /**
   * Simple class when executed feeds a kafka topic with data read from given csv file.
   */
-class SparkProducer {
+class SparkProducer(kafkaHost: String)(implicit spark: SparkSession) {
+
+	val kafka: String = kafkaHost
 
 	/**
 	  * Given path reads files and writes all data to given kafka topic
+	  *
 	  * @param dir
 	  * @param topic
 	  * @param spark
 	  */
-	def fillTopic(dir: String, topic: String)(implicit spark: SparkSession): Unit = {
+	def fillTopic(dir: String, topic: String): Unit = {
 
 		import spark.implicits._
 
-		val schema = Encoders.product[Trip].schema
+		val schema = Encoders.product[Trip].schema // TODO parametrize csv row schema
 
 		val trips = spark.readStream
 			.schema(schema)
@@ -34,7 +34,7 @@ class SparkProducer {
 			.writeStream
 			.format("kafka")
 			.option("topic", topic)
-			.option("kafka.bootstrap.servers", "localhost:9092") // TODO coger de configuración
+			.option("kafka.bootstrap.servers", kafka)
 			.option("checkpointLocation", "res/checkpoint")
 			.start()
 

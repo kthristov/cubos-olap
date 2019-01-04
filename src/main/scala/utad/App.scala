@@ -29,6 +29,9 @@ object App {
 		val fileContents = Source.fromFile("conf/app.conf").getLines.mkString("\n")
 		val config: Config = ConfigFactory.parseString(fileContents)
 
+		val kafkaHost = config.getString("kafka.host")
+		val kafkaPort = config.getString("kafka.port")
+		val kafka = kafkaHost + ":" + kafkaPort
 		val kafkaTopic = config.getString("kafka.olapTopic")
 
 		val cassandraHost = config.getString("cassandra.host")
@@ -37,12 +40,13 @@ object App {
 
 		val hdfsOlapPath = config.getString("hdfs.tripsPath")
 
+		val sparkMaster = config.getString("spark.master")
 		val sparkTriggerInterval = config.getString("spark.triggerInterval")
 
-		// Generating  SparkSession
+		// Generating  SparkSession // TODO spark session creation by extending trait
 		implicit val spark: SparkSession = SparkSession.builder()
 			.config("spark.cassandra.connection.host", cassandraHost)
-			.master("local")
+			.master(sparkMaster)
 			.getOrCreate()
 
 		// spark udfs
@@ -50,7 +54,7 @@ object App {
 		val uuid = udf(() => java.util.UUID.randomUUID().toString)
 
 		// Generating input stream
-		val stream = new SparkConsumer().readTopic(kafkaTopic)
+		val stream = new SparkConsumer(kafka).readTopic(kafkaTopic)
 
 		// Filtering useless rows.
 		val query = stream.filter(!_.isNullAt(0)) // Remove rows with null id.
@@ -78,13 +82,13 @@ object App {
 					// sets names acording to C* columns
 					.withColumnRenamed("pu_location_id", "pickup_location")
 					.withColumnRenamed("pickup_dt", "pickup_hour")
-					.withColumn("id", uuid())  //avoid repeated columns (C* omits them)
+					.withColumn("id", uuid()) //avoid repeated columns (C* omits them)
 					.write
-		            .format("org.apache.spark.sql.cassandra")
-	                .options(Map("keyspace"->keyspace,
-		                         "table"->table))
-		            .mode(SaveMode.Append)
-	                .save()
+					.format("org.apache.spark.sql.cassandra")
+					.options(Map("keyspace" -> keyspace,
+								 "table" -> table))
+					.mode(SaveMode.Append)
+					.save()
 
 				batchDF.unpersist()
 

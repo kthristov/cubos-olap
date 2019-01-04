@@ -5,26 +5,31 @@ import org.apache.spark.sql.functions._
 
 import utad.data.Trip
 
-class SparkConsumer {
+class SparkConsumer(kafkaHost: String)(implicit spark: SparkSession) {
+
+
+	// From which kafka to read from
+	val kafka: String = kafkaHost
 
 	/**
 	  * Method which subscribes to the given topic and returns Dataset to be processed.
 	  * Return stream must be started.
+	  *
 	  * @param topic Topic to read from.
 	  * @param spark SparkSession for reading from Kafka.
 	  * @return Dataset to be processed.
 	  */
-	def readTopic(topic: String)(implicit spark: SparkSession): DataFrame = {
+	def readTopic(topic: String): DataFrame = {
 
 		import spark.implicits._
 
-		val schema = Encoders.product[Trip].schema
+		val schema = Encoders.product[Trip].schema // TODO parametrize schema
 
 		val df = spark
 			.readStream
 			.format("kafka")
-			.option("kafka.bootstrap.servers", "localhost:9092")
-			.option("startingOffsets", "earliest")
+			.option("kafka.bootstrap.servers", kafka)
+			.option("startingOffsets", "earliest") // TODO hardcoded...
 			.option("subscribe", topic)
 			.load()
 
